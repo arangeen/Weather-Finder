@@ -1,3 +1,19 @@
+<?php 
+    // if someone has requested a city, set up forcast page
+    if($_GET['city']) {
+        $forecastPage = file_get_contents("https://www.weather-forecast.com/locations/London/forecasts/latest");
+        
+        $pageArray = explode( '<div class="b-forecast__overflow"><div class="b-forecast__wrapper b-forecast__wrapper--js"><table class="b-forecast__table js-forecast-table"><thead><tr class="b-forecast__table-description b-forecast__hide-for-small days-summaries"><th></th><td class="b-forecast__table-description-cell--js" colspan="9"><span class="b-forecast__table-description-title"><h2>London Weather Today </h2>(1&ndash;3 days)</span><p class="b-forecast__table-description-content"><span class="phrase">' , $forecastPage);
+
+        echo $pageArray[1];
+    }
+
+
+    
+
+?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
