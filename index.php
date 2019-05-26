@@ -12,8 +12,16 @@
 
     <style type="text/css">
         
-        body, html {
+        
+
+        body {
             height: 100%;
+            backgorund: none; 
+            
+        }
+
+        html {
+            height; 100%
         }
 
         .bg { 
@@ -29,12 +37,48 @@
             background-size: cover;
         }
 
+        .container{
+
+            text-align: center; 
+            margin-top: 200px; 
+            width: 450px;
+
+        }
+
+        input {
+            margin: 20px 0; 
+        }
+
     </style>
 
   </head>
-  <body>
+  <body background="img/background.jpg" >
+
+  
+     <div class="container">
+
+        <h1> What's The Weather? </h1> 
+        
+
+        <!–– now adding bootstrap form-->
+
+        <form>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Enter the name of a city.</label>
+                <input type="text" class="form-control" name="city" id="city" aria-describedby="emailHelp" placeholder="Eg. London, Tokyo">
+            
+            </div>
+            
+                <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        
+
+
+
+    </div>
    
-    <img src="img/background.jpg">
+    
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
