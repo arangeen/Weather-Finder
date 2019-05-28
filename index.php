@@ -3,7 +3,7 @@
    $weather = ""; 
    $error = "";
    // if someone has requested a city, set up forcast page
-    if($_GET['city']) {
+    if(array_key_exists('city', $_GET)) {
         
         //ignore all spaced in the string 
         $city = str_replace('', '', $_GET['city']);
@@ -15,21 +15,31 @@
         } else {
 
 
-        $forecastPage = file_get_contents("https://www.weather-forecast.com/locations/".$city."London/forecasts/latest");
-        
-        //this will delete eveything from the website, up to the content that you want
-        $pageArray = explode( '<div class="b-forecast__overflow"><div class="b-forecast__wrapper b-forecast__wrapper--js"><table 
-        class="b-forecast__table js-forecast-table"><thead><tr class="b-forecast__table-description b-forecast__hide-for-small 
-        days-summaries"><th></th><td class="b-forecast__table-description-cell--js" colspan="9"><span 
-        class="b-forecast__table-description-title"><h2>London Weather Today </h2>(1&ndash;3 days)</span><p class="b-forecast__table-description-content">
-        <span class="phrase">' , $forecastPage);
+            $forecastPage = file_get_contents("https://www.weather-forecast.com/locations/".$city."London/forecasts/latest");
+            
+            //this will delete eveything from the website, up to the content that you want
+            $pageArray = explode( '<div class="b-forecast__overflow"><div class="b-forecast__wrapper b-forecast__wrapper--js"><table 
+            class="b-forecast__table js-forecast-table"><thead><tr class="b-forecast__table-description b-forecast__hide-for-small 
+            days-summaries"><th></th><td class="b-forecast__table-description-cell--js" colspan="9"><span 
+            class="b-forecast__table-description-title"><h2>London Weather Today </h2>(1&ndash;3 days)</span><p class="b-forecast__table-description-content">
+            <span class="phrase">' , $forecastPage);
 
-        // now we delete everything that is after the content that we want
-        $secondPageArray = explode('</span></p></div>' , $pageArray[1]);
+            if(sizeof($pageArray) > 1) {
 
-        $weather =  $secondPageArray[0]; 
-        }
+                // now we delete everything that is after the content that we want
+                $secondPageArray = explode('</span></p></div>' , $pageArray[1]);
+                if(sizeof($secondPageArray) > 1) {
+                    $weather =  $secondPageArray[0]; 
+
+                } else {
+                    $error = "That city could not be found.";
+                }
+            } else {
+                $error = "That city could not be found.";
+            }
     }
+    }
+
 
 
     
@@ -115,7 +125,8 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
-        // show weather here as a boothstrap alert
+        <!–– show weather here as alert-->
+
         <div id="weather"> <?php 
             
             if($weather){
