@@ -1,11 +1,34 @@
 <?php 
-    // if someone has requested a city, set up forcast page
+   
+   $weather = ""; 
+   $error = "";
+   // if someone has requested a city, set up forcast page
     if($_GET['city']) {
-        $forecastPage = file_get_contents("https://www.weather-forecast.com/locations/London/forecasts/latest");
         
-        $pageArray = explode( '<div class="b-forecast__overflow"><div class="b-forecast__wrapper b-forecast__wrapper--js"><table class="b-forecast__table js-forecast-table"><thead><tr class="b-forecast__table-description b-forecast__hide-for-small days-summaries"><th></th><td class="b-forecast__table-description-cell--js" colspan="9"><span class="b-forecast__table-description-title"><h2>London Weather Today </h2>(1&ndash;3 days)</span><p class="b-forecast__table-description-content"><span class="phrase">' , $forecastPage);
+        //ignore all spaced in the string 
+        $city = str_replace('', '', $_GET['city']);
 
-        echo $pageArray[1];
+        $file_headers = @get_headers("https://www.weather-forecast.com/locations/".$city."London/forecasts/latest");
+
+        if($file_headers[0] == 'HTTP/1.1 4 404 Not found') {
+            $error = "That city could not be found."; 
+        } else {
+
+
+        $forecastPage = file_get_contents("https://www.weather-forecast.com/locations/".$city."London/forecasts/latest");
+        
+        //this will delete eveything from the website, up to the content that you want
+        $pageArray = explode( '<div class="b-forecast__overflow"><div class="b-forecast__wrapper b-forecast__wrapper--js"><table 
+        class="b-forecast__table js-forecast-table"><thead><tr class="b-forecast__table-description b-forecast__hide-for-small 
+        days-summaries"><th></th><td class="b-forecast__table-description-cell--js" colspan="9"><span 
+        class="b-forecast__table-description-title"><h2>London Weather Today </h2>(1&ndash;3 days)</span><p class="b-forecast__table-description-content">
+        <span class="phrase">' , $forecastPage);
+
+        // now we delete everything that is after the content that we want
+        $secondPageArray = explode('</span></p></div>' , $pageArray[1]);
+
+        $weather =  $secondPageArray[0]; 
+        }
     }
 
 
@@ -56,13 +79,17 @@
         .container{
 
             text-align: center; 
-            margin-top: 200px; 
+            margin-top: 100px; 
             width: 450px;
 
         }
 
         input {
             margin: 20px 0; 
+        }
+
+        .weather {
+            margin-top: 15px;
         }
 
     </style>
@@ -81,14 +108,27 @@
         <form>
             <div class="form-group">
                 <label for="exampleInputEmail1">Enter the name of a city.</label>
-                <input type="text" class="form-control" name="city" id="city" aria-describedby="emailHelp" placeholder="Eg. London, Tokyo">
+                <input type="text" class="form-control" name="city" id="city" aria-describedby="emailHelp" placeholder="Eg. London, Tokyo" value = "<?php echo $_GET['city']; ?>">
             
             </div>
             
                 <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
+        // show weather here as a boothstrap alert
+        <div id="weather"> <?php 
+            
+            if($weather){
+                echo '<div class="alert alert-success" role="alert">
+                '.$weather.'
+              </div>';
+            } else if ($error) {
+                echo '<div class="alert alert-danger" role="alert">
+                '.$error.'
+              </div>';
+            }
         
+        ?> </div>
 
 
 
